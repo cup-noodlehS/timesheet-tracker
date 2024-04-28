@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from "react";
+import { TbArrowsSort } from "react-icons/tb";
 
 import useTimesheetStore from "@/store/timesheetStore";
 
@@ -9,9 +10,10 @@ import NewLogModal from "@/components/timesheet/NewLogModal";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const { timeSheet, fetchLogs, addLog } = useTimesheetStore();
+  const { timeSheet, fetchLogs, sortLogs } = useTimesheetStore();
   const [showNewLogModal, setShowNewLogModal] = useState(false);
-  const logsRef = useRef();  
+  const [sortDescending, setSortDescending] = useState(false);
+  const logsRef = useRef(); 
 
   useEffect(() => {
     setIsLoading(true);
@@ -20,6 +22,11 @@ export default function Home() {
       setIsLoading(false);
     }, 2000);
   }, []);
+
+  const handleSort = () => {
+    setSortDescending(!sortDescending);
+    sortLogs(sortDescending);
+  }
 
   const scrollToBottom = () => {
     logsRef.current.scrollTop = logsRef.current.scrollHeight;
@@ -40,8 +47,13 @@ export default function Home() {
             <div className="font-semibold text-lg">
               Projects
             </div>
-            <div className="bg-red-400 text-white text-center p-1 min-w-[25px] rounded-md">
-              {timeSheet.length}
+            <div className="flex gap-2">
+              <button onClick={handleSort} className="px-2 rounded-md hover:bg-gray-300 transition duration-200">
+                <TbArrowsSort/>
+              </button>
+              <div className="bg-red-400 text-white text-center p-1 min-w-[25px] rounded-md">
+                {timeSheet.length}
+              </div>
             </div>
           </div>
           <div className="flex justify-between font-medium border-b px-5 py-2">

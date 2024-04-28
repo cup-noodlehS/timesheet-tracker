@@ -1,74 +1,8 @@
-// useTimesheetStore.js
-
 import create from 'zustand';
 
-const currentDate = new Date();
-// remove this :)
-const mockData = [
-    {
-        name: "Project A",
-        hours: 5,
-        createdOn: currentDate.setDate(currentDate.getDate() - 2)
-    },
-    {
-        name: "Project B",
-        hours: 3,
-        createdOn: currentDate.setDate(currentDate.getDate() - 1)
-    },
-    {
-        name: "Project C",
-        hours: 8,
-        createdOn: currentDate
-    },
-    {
-        name: "Project Z",
-        hours: 7,
-        createdOn: currentDate.setDate(currentDate.getDate() - 2)
-    },
-    {
-        name: "Project 2",
-        hours: 3,
-        createdOn: currentDate.setDate(currentDate.getDate() - 1)
-    },
-    {
-        name: "Project v",
-        hours: 8,
-        createdOn: currentDate
-    },
-    {
-        name: "Project A",
-        hours: 5,
-        createdOn: currentDate.setDate(currentDate.getDate() - 2)
-    },
-    {
-        name: "Project B",
-        hours: 3,
-        createdOn: currentDate.setDate(currentDate.getDate() - 1)
-    },
-    {
-        name: "Project C",
-        hours: 8,
-        createdOn: currentDate
-    },
-    {
-        name: "Project Z",
-        hours: 7,
-        createdOn: currentDate.setDate(currentDate.getDate() - 2)
-    },
-    {
-        name: "Project 2",
-        hours: 3,
-        createdOn: currentDate.setDate(currentDate.getDate() - 1)
-    },
-    {
-        name: "Project v",
-        hours: 8,
-        createdOn: currentDate
-    },
-]
 const useTimesheetStore = create((set) => ({
-    timeSheet: [...mockData],
-    fetchLogs: () => set({ timeSheet: JSON.parse(localStorage.getItem('timeSheet')) || [...mockData] }),
+    timeSheet: [],
+    fetchLogs: () => set({ timeSheet: JSON.parse(localStorage.getItem('timeSheet')) || [] }),
     addLog: (data) => {
         const newLog = {
         name: data.name.trim(),
@@ -81,6 +15,18 @@ const useTimesheetStore = create((set) => ({
         return { timeSheet: updatedTimeSheet };
         });
     },
+    sortLogs: (data) => {
+        const descending = data;
+        set((state) => {
+            const updatedTimeSheet = [...state.timeSheet].sort((a, b) => {
+                if (descending) {
+                return b.createdOn - a.createdOn;
+                }
+                return a.createdOn - b.createdOn;
+            });
+            return { timeSheet: updatedTimeSheet };
+        });
+    }
 }));
 
 export default useTimesheetStore;
