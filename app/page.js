@@ -7,12 +7,14 @@ import useTimesheetStore from "@/store/timesheetStore";
 
 import Card from "@/components/timesheet/Card";
 import NewLogModal from "@/components/timesheet/NewLogModal";
+import { Input } from "postcss";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const { timeSheet, fetchLogs, sortLogs } = useTimesheetStore();
+  const { timeSheet, fetchLogs, sortLogs, filterLogsByName } = useTimesheetStore();
   const [showNewLogModal, setShowNewLogModal] = useState(false);
   const [sortDescending, setSortDescending] = useState(false);
+  const [nameFilter, setNameFilter] = useState('');
   const logsRef = useRef(); 
 
   useEffect(() => {
@@ -20,8 +22,12 @@ export default function Home() {
     setTimeout(() => { // Simulate API call
       fetchLogs(); // await this
       setIsLoading(false);
-    }, 2000);
+    }, 1000);
   }, []);
+
+  useEffect(() => {
+    filterLogsByName(nameFilter);
+  }, [nameFilter])
 
   const handleSort = () => {
     setSortDescending(!sortDescending);
@@ -43,25 +49,28 @@ export default function Home() {
       </header>
       <main className="flex flex-col items-center h-[800px]">
         <div className="w-[400px] flex flex-col max-h-full rounded-md border border-gray-500/25 shadow-md">
-          <div className="flex justify-between items-center px-5 py-4 bg-gray-100 border-b">
-            <div className="font-semibold text-lg">
-              Projects
-            </div>
-            <div className="flex gap-2">
-              <button onClick={handleSort} className="px-2 rounded-md hover:bg-gray-300 transition duration-200">
-                <TbArrowsSort/>
-              </button>
+          <div className="flex flex-col gap-2 px-5 py-4 bg-gray-100 border-b">
+            <div className="flex justify-between items-center">
+              <div className="font-semibold text-lg">
+                Projects
+              </div>
               <div className="bg-red-400 text-white text-center p-1 min-w-[25px] rounded-md">
                 {timeSheet.length}
               </div>
+            </div>
+            <div>
+              <input onChange={(e) => setNameFilter(e.target.value)} placeholder="Search name..." className="h-[30px] px-2" />
             </div>
           </div>
           <div className="flex justify-between font-medium border-b px-5 py-2">
             <div>
               Name
             </div>
-            <div>
+            <div className="flex gap-2">
               Hours worked
+              <button onClick={handleSort} className="px-2 rounded-sm hover:bg-gray-200 transition duration-150">
+                <TbArrowsSort/>
+              </button>
             </div>
           </div>
           <div ref={logsRef} className="flex flex-col gap-3 py-3 grow overflow-y-auto">

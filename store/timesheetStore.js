@@ -3,6 +3,15 @@ import create from 'zustand';
 const useTimesheetStore = create((set) => ({
     timeSheet: [],
     fetchLogs: () => set({ timeSheet: JSON.parse(localStorage.getItem('timeSheet')) || [] }),
+    filterLogsByName: (nameFilter) => {
+        const logs = JSON.parse(localStorage.getItem('timeSheet')) || [];
+        if (!nameFilter.trim().length || !logs.length) {
+            set({ timeSheet: logs });
+        } else {
+            const filteredLogs = logs.filter(obj => obj.name.includes(nameFilter.trim()));
+            set({ timeSheet: filteredLogs });
+        }
+    },      
     addLog: (data) => {
         const newLog = {
         name: data.name.trim(),
@@ -20,9 +29,9 @@ const useTimesheetStore = create((set) => ({
         set((state) => {
             const updatedTimeSheet = [...state.timeSheet].sort((a, b) => {
                 if (descending) {
-                return b.createdOn - a.createdOn;
+                return b.hours - a.hours;
                 }
-                return a.createdOn - b.createdOn;
+                return a.hours - b.hours;
             });
             return { timeSheet: updatedTimeSheet };
         });
