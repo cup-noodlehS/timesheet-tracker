@@ -59,7 +59,7 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <input onChange={(e) => setNameFilter(e.target.value)} placeholder="Search name..." className="h-[30px] px-2" />
+              <input onChange={(e) => setNameFilter(e.target.value)} placeholder="Search name..." className="h-[30px] px-2 w-full rounded-sm" />
             </div>
           </div>
           <div className="flex justify-between font-medium border-b px-5 py-2">

@@ -19,7 +19,7 @@ function NewLogModal(props) {
 
     const saveLog = () => {
         setIsLoading(true);
-        setTimeout(() => {
+        setTimeout(() => { // simulate api call
             const data = {
                 name,
                 hours
